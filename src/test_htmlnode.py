@@ -12,7 +12,7 @@ class TestHTMLNode(unittest.TestCase):
     def test_to_html(self):
         actual = HTMLNode("a", "link", None, {
                                "href": "https://boot.dev"}).props_to_html()
-        expected = f"href=https://boot.dev"
+        expected = f" href=\"https://boot.dev\""
         self.assertEqual(expected, actual)
 
 

@@ -10,9 +10,11 @@ class HTMLNode():
 
     def props_to_html(self):
         props = []
+        if not self.props:
+            return ''
         for key, value in self.props.items():
-            props.append(f"{key}={value}")
-        return ' '.join(props)
+            props.append(f"{key}=\"{value}\"")
+        return ' ' + ' '.join(props)
 
     def __repr__(self):
         return f"{self.tag} {self.value} {self.children} {self.props}"
