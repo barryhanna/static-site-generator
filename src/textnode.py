@@ -3,7 +3,14 @@ from leafnode import LeafNode
 
 
 class TextNode():
-    text_types = ["text", "bold", "italic", "code", "link", "image"]
+    text_type_text = "text"
+    text_type_bold = "bold"
+    text_type_italic = "italic"
+    text_type_code = "code"
+    text_type_link = "link"
+    text_type_image = "image"
+    text_types = [text_type_text, text_type_bold, text_type_italic,
+                  text_type_code, text_type_link, text_type_image]
 
     def __init__(self, text, text_type, url=None):
         self.text = text
@@ -31,3 +38,22 @@ class TextNode():
             return HTMLNode("a", text_node.value, {"href": text_node.props.href})
         if (text_node.text_type == "image"):
             return HTMLNode("img", "", {"src": text_node.url, "alt": text_node.value})
+
+    @staticmethod
+    def split_nodes_delimiter(old_nodes, delimiter, ttc):
+        new_nodes = []
+        for old_node in old_nodes:
+            node = old_node.text.split(delimiter)
+            if len(node) < 3:
+                raise Exception(
+                    "Unbalanced delimiter. Must have start and end delimiter")
+            if type(node) != TextNode:
+                new_nodes.append(node)
+                continue
+
+            # only process non-empty strings
+            for part in node:
+                if part:
+                    new_nodes.append(TextNode(None, part, ttc))
+
+        return new_nodes
