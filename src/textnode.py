@@ -21,13 +21,13 @@ class TextNode():
         return self.text == other.text and self.text_type == other.text_type and self.url == other.url
 
     def __repr__(self):
-        return f"TextNode({self.text}, {self.text_type}, {self.url})"
+        return f"TextNode({self.text},{self.text_type})"
 
     def text_node_to_html_node(self, text_node):
         if not (text_node.text_type in self.text_types):
             raise Exception("TextNode does not have a supported text type")
         if (text_node.text_type == "text"):
-            return LeafNode(None, text_node.value)
+            return LeafNode(text_node.value, text_node.type)
         if (text_node.text_type == "bold"):
             return LeafNode("b", text_node.value)
         if (text_node.text_type == "italic"):
@@ -43,17 +43,22 @@ class TextNode():
     def split_nodes_delimiter(old_nodes, delimiter, ttc):
         new_nodes = []
         for old_node in old_nodes:
+            if type(old_node) != TextNode:
+                new_nodes.append(old_node)
+                continue
+
             node = old_node.text.split(delimiter)
+            # ['','some text','']
             if len(node) < 3:
                 raise Exception(
                     "Unbalanced delimiter. Must have start and end delimiter")
-            if type(node) != TextNode:
-                new_nodes.append(node)
-                continue
 
             # only process non-empty strings
-            for part in node:
-                if part:
-                    new_nodes.append(TextNode(None, part, ttc))
+            if node[0]:
+                new_nodes.append(TextNode(node[0], "text"))
+            if node[1]:
+                new_nodes.append(TextNode(node[1], ttc))
+            if node[2]:
+                new_nodes.append(TextNode(node[2], "text"))
 
         return new_nodes
