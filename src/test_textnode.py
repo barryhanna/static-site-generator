@@ -86,6 +86,24 @@ class TestTextNode(unittest.TestCase):
                     ("another", "https://www.example.com/another")]
         self.assertEqual(actual, expected)
 
+    def test_split_nodes_images(self):
+        node = TextNode("This is text with an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and another ![second image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png)",
+                        TextNode.text_type_text,
+                        )
+        actual = TextNode.split_nodes_images([node])
+        expected = [
+            TextNode("This is text with an ", TextNode.text_type_text),
+            TextNode("image", TextNode.text_type_image,
+                     "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png"),
+            TextNode(" and another ", TextNode.text_type_text),
+            TextNode(
+                "second image", TextNode.text_type_image, "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png"
+            ),
+        ]
+        print(f"ACTUAL:\n{actual}")
+        print(f"EXPECTED:\n{expected}")
+        self.assertEqual(actual, expected)
+
 
 if __name__ == "__main__":
     unittest.main()
