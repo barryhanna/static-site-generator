@@ -40,10 +40,14 @@ class TextNode():
             return HTMLNode("img", "", {"src": text_node.url, "alt": text_node.value})
 
     @staticmethod
-    def split_nodes_delimiter(old_nodes, delimiter, ttc):
+    def split_nodes_delimiter(old_nodes, delimiter, text_type):
         new_nodes = []
         for old_node in old_nodes:
             if type(old_node) != TextNode:
+                new_nodes.append(old_node)
+                continue
+
+            if text_type == "text":
                 new_nodes.append(old_node)
                 continue
 
@@ -57,7 +61,7 @@ class TextNode():
             if node[0]:
                 new_nodes.append(TextNode(node[0], "text"))
             if node[1]:
-                new_nodes.append(TextNode(node[1], ttc))
+                new_nodes.append(TextNode(node[1], text_type))
             if node[2]:
                 new_nodes.append(TextNode(node[2], "text"))
 

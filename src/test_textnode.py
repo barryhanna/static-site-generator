@@ -18,6 +18,15 @@ class TestTextNode(unittest.TestCase):
         node2 = TextNode('This is a text node, but different', 'bold')
         self.assertNotEqual(node, node2)
 
+    def test_split_nodes_delimiter_text(self):
+        node = TextNode(
+            "This is a text node", "text")
+        actual = TextNode.split_nodes_delimiter([node], None, node.text_type)
+        expected = [
+            TextNode("This is a text node", TextNode.text_type_text),
+        ]
+        self.assertEqual(actual, expected)
+
     def test_split_nodes_delimiter_code(self):
         node = TextNode(
             "This is text with a `code block` word", "code")
@@ -51,6 +60,17 @@ class TestTextNode(unittest.TestCase):
             TextNode(" word", TextNode.text_type_text)
         ]
         self.assertEqual(actual, expected)
+
+    # def test_split_nodes_delimiter_link(self):
+    #     node = TextNode(
+    #         "This is text with a [link](https://boot.dev) word", "link")
+    #     actual = TextNode.split_nodes_delimiter([node], "()", node.text_type)
+    #     expected = [
+    #         TextNode("This is text with a ", TextNode.text_type_text),
+    #         TextNode("italic block", TextNode.text_type_italic),
+    #         TextNode(" word", TextNode.text_type_text)
+    #     ]
+    #     self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":
