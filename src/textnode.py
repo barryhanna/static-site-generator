@@ -1,3 +1,4 @@
+import re
 from htmlnode import HTMLNode
 from leafnode import LeafNode
 
@@ -66,3 +67,15 @@ class TextNode():
                 new_nodes.append(TextNode(node[2], "text"))
 
         return new_nodes
+
+    @staticmethod
+    def extract_markdown_images(text):
+        markdown_image_re = r"!\[(.*?)\]\((.*?)\)"
+        matches = re.findall(markdown_image_re, text)
+        return matches
+
+    @staticmethod
+    def extract_markdown_links(text):
+        markdown_image_re = r"\[(.*?)\]\((.*?)\)"
+        matches = re.findall(markdown_image_re, text)
+        return matches
