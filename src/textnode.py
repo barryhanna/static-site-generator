@@ -90,18 +90,19 @@ class TextNode():
                     new_nodes.append(
                         TextNode(text_nodes[0], TextNode.text_type_text))
                 # add the image link node
-                print(image_node)
                 new_nodes.append(
                     TextNode(image_node[0], "image", image_node[1]))
 
                 # right-hand node
                 if text_nodes[1]:
-                    if TextNode.has_image_link(text_nodes[1]):
-                        TextNode.split_nodes_images([
-                            TextNode(text_nodes[1], TextNode.text_type_text)])
-                    else:
-                        new_nodes.append(
-                            TextNode(text_nodes[1], TextNode.text_type_text))
+                    new_nodes.append(
+                        TextNode(text_nodes[1], TextNode.text_type_text))
+                    # if TextNode.has_image_link(text_nodes[1]):
+                    #     TextNode.split_nodes_images(
+                    #         [TextNode(text_nodes[1], TextNode.text_type_text)])
+                    # else:
+                    #     new_nodes.append(
+                    #         TextNode(text_nodes[1], TextNode.text_type_text))
 
         return new_nodes
 
