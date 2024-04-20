@@ -73,41 +73,39 @@ class TextNode():
         new_nodes = []
         for node in old_nodes:
             extracted_image_nodes = TextNode.extract_markdown_images(node.text)
-            # [("image","https://www.someimage.com"),("image","https://www.someimage.com")]
-            # if no image links are extracted, just add the node to new_nodes
             if not extracted_image_nodes:
                 new_nodes.append(node)
                 continue
-            # TODO:
+
             for image_node in extracted_image_nodes:
-                # reconstruct markdown image link to use for split
-                image_link = f"![{image_node[0]}]({image_node[1]})"
-                # split the node text on image link
-                text_nodes = node.text.split(image_link, 1)
-
-                # left-hand node, only do if node is not empty
-                if text_nodes[0]:
-                    new_nodes.append(
-                        TextNode(text_nodes[0], TextNode.text_type_text))
-                # add the image link node
-                new_nodes.append(
-                    TextNode(image_node[0], "image", image_node[1]))
-
-                # right-hand node
-                if text_nodes[1]:
-                    new_nodes.append(
-                        TextNode(text_nodes[1], TextNode.text_type_text))
-                    # if TextNode.has_image_link(text_nodes[1]):
-                    #     TextNode.split_nodes_images(
-                    #         [TextNode(text_nodes[1], TextNode.text_type_text)])
-                    # else:
-                    #     new_nodes.append(
-                    #         TextNode(text_nodes[1], TextNode.text_type_text))
+                new_nodes.extend(TextNode.split_node_image(node))
 
         return new_nodes
 
-    # Check if a given string contains a markdown image link
+    # split a single node into an image node and text nodes
+    @staticmethod
+    def split_node_image(node):
+        nodes = []
+        # reconstruct markdown image link to use for split
+        image_link = f"![{node[0]}]({node[1]})"
+        # split the node text on image link
+        text_nodes = node.text.split(image_link, 1)
 
+        # left-hand node, only do if node is not empty
+        if text_nodes[0]:
+            nodes.append(
+                TextNode(text_nodes[0], TextNode.text_type_text))
+        # add the image link node
+        nodes.append(
+            TextNode(node[0], "image", node[1]))
+
+        # right-hand node
+        if text_nodes[1]:
+            nodes.append(
+                TextNode(text_nodes[1], TextNode.text_type_text))
+        return nodes
+
+    # Check if a given string contains a markdown image link
     @ staticmethod
     def has_image_link(str):
         return len(TextNode.extract_markdown_images(str)) > 0
