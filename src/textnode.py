@@ -73,13 +73,28 @@ class TextNode():
         new_nodes = []
         for node in old_nodes:
             extracted_image_nodes = TextNode.extract_markdown_images(node.text)
-            if not extracted_image_nodes:
+            if node.text_type != TextNode.text_type_text:
                 new_nodes.append(node)
                 continue
-
-            for image_node in extracted_image_nodes:
-                new_nodes.extend(TextNode.split_node_image(node))
-
+            original_text = node.text
+            images = TextNode.extract_markdown_images(original_text)
+            if len(images) == 0:
+                new_nodes.append(node)
+                continue
+            for image in images:
+                sections = original_text.split(f"![{image[0]}]({image[1]})")
+                if len(sections) != 2:
+                    raise ValueError(
+                        "Invalid markdown, image section not closed")
+                if sections[0] != "":
+                    new_nodes.append(
+                        TextNode(sections[0], TextNode.text_type_text))
+                new_nodes.append(
+                    TextNode(image[0], TextNode.text_type_image, image[1]))
+                original_text = sections[1]
+            if original_text != "":
+                new_nodes.append(
+                    TextNode(original_text, TextNode.text_type_text))
         return new_nodes
 
     # split a single node into an image node and text nodes
