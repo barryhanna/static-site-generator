@@ -72,7 +72,6 @@ class TextNode():
     def split_nodes_images(old_nodes):
         new_nodes = []
         for node in old_nodes:
-            extracted_image_nodes = TextNode.extract_markdown_images(node.text)
             if node.text_type != TextNode.text_type_text:
                 new_nodes.append(node)
                 continue
@@ -97,30 +96,36 @@ class TextNode():
                     TextNode(original_text, TextNode.text_type_text))
         return new_nodes
 
-    # split a single node into an image node and text nodes
     @staticmethod
-    def split_node_image(node):
-        nodes = []
-        # reconstruct markdown image link to use for split
-        image_link = f"![{node[0]}]({node[1]})"
-        # split the node text on image link
-        text_nodes = node.text.split(image_link, 1)
-
-        # left-hand node, only do if node is not empty
-        if text_nodes[0]:
-            nodes.append(
-                TextNode(text_nodes[0], TextNode.text_type_text))
-        # add the image link node
-        nodes.append(
-            TextNode(node[0], "image", node[1]))
-
-        # right-hand node
-        if text_nodes[1]:
-            nodes.append(
-                TextNode(text_nodes[1], TextNode.text_type_text))
-        return nodes
+    def split_nodes_link(old_nodes):
+        new_nodes = []
+        for node in old_nodes:
+            if node.text_type != TextNode.text_type_text:
+                new_nodes.append(node)
+                continue
+            original_text = node.text
+            links = TextNode.extract_markdown_links(original_text)
+            if len(links) == 0:
+                new_nodes.append(node)
+                continue
+            for link in links:
+                sections = original_text.split(f"[{link[0]}]({link[1]})")
+                if len(sections) != 2:
+                    raise ValueError(
+                        "Invalid markdown, link section not closed")
+                if sections[0] != "":
+                    new_nodes.append(
+                        TextNode(sections[0], TextNode.text_type_text))
+                new_nodes.append(
+                    TextNode(link[0], TextNode.text_type_link, link[1]))
+                original_text = sections[1]
+            if original_text != "":
+                new_nodes.append(
+                    TextNode(original_text, TextNode.text_type_link))
+        return new_nodes
 
     # Check if a given string contains a markdown image link
+
     @ staticmethod
     def has_image_link(str):
         return len(TextNode.extract_markdown_images(str)) > 0

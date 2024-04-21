@@ -100,8 +100,22 @@ class TestTextNode(unittest.TestCase):
                 "second image", TextNode.text_type_image, "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png"
             ),
         ]
-        print(f"ACTUAL:\n{actual}")
-        print(f"EXPECTED:\n{expected}")
+        self.assertEqual(actual, expected)
+
+    def test_split_nodes_link(self):
+        node = TextNode("This is text with an [link](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and another [second link](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png)",
+                        TextNode.text_type_text,
+                        )
+        actual = TextNode.split_nodes_link([node])
+        expected = [
+            TextNode("This is text with an ", TextNode.text_type_text),
+            TextNode("link", TextNode.text_type_link,
+                     "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png"),
+            TextNode(" and another ", TextNode.text_type_text),
+            TextNode(
+                "second link", TextNode.text_type_link, "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png"
+            ),
+        ]
         self.assertEqual(actual, expected)
 
 
