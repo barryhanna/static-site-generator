@@ -118,6 +118,24 @@ class TestTextNode(unittest.TestCase):
         ]
         self.assertEqual(actual, expected)
 
+    def test_text_to_textnodes(self):
+        text = "This is **text** with an *italic* word and a `code block` and an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and a [link](https://boot.dev)"
+        actual = TextNode.text_to_textnodes(text)
+        expected = [
+            TextNode("This is ", TextNode.text_type_text),
+            TextNode("text", TextNode.text_type_bold),
+            TextNode(" with an ", TextNode.text_type_text),
+            TextNode("italic", TextNode.text_type_italic),
+            TextNode(" word and a ", TextNode.text_type_text),
+            TextNode("code block", TextNode.text_type_code),
+            TextNode(" and an ", TextNode.text_type_text),
+            TextNode("image", TextNode.text_type_image,
+                     "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png"),
+            TextNode(" and a ", TextNode.text_type_text),
+            TextNode("link", TextNode.text_type_link, "https://boot.dev"),
+        ]
+        self.assertEqual(actual, expected)
+
 
 if __name__ == "__main__":
     unittest.main()

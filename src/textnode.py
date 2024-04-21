@@ -141,3 +141,12 @@ class TextNode():
         markdown_image_re = r"\[(.*?)\]\((.*?)\)"
         matches = re.findall(markdown_image_re, text)
         return matches
+
+    @staticmethod
+    def text_to_textnodes(text):
+        nodes = []
+        text_nodes = TextNode.split_nodes_delimiter(
+            text, "\n", TextNode.text_type_text)
+        nodes.append(TextNode.split_nodes_images(text_nodes))
+        nodes.append(TextNode.split_nodes_link(text_nodes))
+        return nodes
