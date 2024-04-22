@@ -152,8 +152,5 @@ class TextNode():
 
     @staticmethod
     def markdown_to_blocks(markdown):
-        blocks = re.split(r'\n{2,}', markdown)
-        blocks = [block.strip() for block in blocks if block != ""]
-        for index, block in enumerate(blocks):
-            print(f"{index}: {block}")
-        return blocks
+        blocks = re.split(r"\n{2,}", markdown)
+        return [block.strip() for block in blocks if block.strip() != '']
