@@ -27,7 +27,6 @@ class BlockType():
         elif markdown.startswith("1. "):
             marker = markdown[0]
             list_items = markdown.split("\n")
-            num_list_items = len(list_items)
             for i, item in enumerate(list_items):
                 if not item.startswith(f"{i+1}. "):
                     return BlockType.block_type_paragraph
