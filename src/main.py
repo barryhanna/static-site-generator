@@ -1,6 +1,6 @@
 import os
 import shutil
-
+from generator import generate_page
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 INPUT_DIR = os.path.join(dir_path, "..", "static")
@@ -36,6 +36,16 @@ def copy_assets(src, dest):
             copy_assets(os.path.join(src, file), os.path.join(dest, file))
 
 
+def generate_page_from_template(from_path, template_path, dest_path):
+    generate_page(from_path, template_path, dest_path)
+
+
 if __name__ == "__main__":
     clean_output_dir()
     copy_assets(INPUT_DIR, OUTPUT_DIR)
+    content_dir = os.path.join(os.getcwd(), "content")
+    output_file = os.path.join(os.getcwd(), "public", "index.html")
+    markdown_content = os.path.join(content_dir, "index.md")
+    template = os.path.join(content_dir, "template.html")
+
+    generate_page_from_template(markdown_content, template, output_file)

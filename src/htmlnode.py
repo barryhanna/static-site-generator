@@ -34,7 +34,7 @@ class HTMLNode():
 
     @staticmethod
     def markdown_to_html_node(markdown):
-        blocks = HTMLNode.markdown_to_blocks()
+        blocks = HTMLNode.markdown_to_blocks(markdown)
         html_blocks = ""
         for block in blocks:
             if BlockType.block_to_block_type(block) == BlockType.block_type_quote:
