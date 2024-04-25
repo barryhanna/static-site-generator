@@ -126,20 +126,19 @@ def markdown_to_blocks(markdown):
 
 
 def text_node_to_html_node(text_node):
-    if not (text_node.text_type in text_types):
-        raise Exception("TextNode does not have a supported text type")
     if (text_node.text_type == "text"):
-        return LeafNode(text_node.text, text_node.text_type)
+        return LeafNode(None, text_node.text, text_node.text_type)
     if (text_node.text_type == "bold"):
         return LeafNode("b", text_node.text)
     if (text_node.text_type == "italic"):
-        return HTMLNode("i", text_node.text)
+        return LeafNode("i", text_node.text)
     if (text_node.text_type == "code"):
-        return HTMLNode("code", text_node.text)
+        return LeafNode("code", text_node.text)
     if (text_node.text_type == "link"):
-        return HTMLNode("a", text_node.text, {"href": text_node.url})
+        return LeafNode("a", text_node.text, {"href": text_node.url})
     if (text_node.text_type == "image"):
-        return HTMLNode("img", "", {"src": text_node.url, "alt": text_node.text})
+        return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
+    raise Exception("TextNode does not have a supported text type")
 
 
 def text_to_textnodes(text):
