@@ -1,6 +1,6 @@
 import os
 import shutil
-from generator import generate_page
+from generator import generate_pages_recursive
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 INPUT_DIR = os.path.join(dir_path, "..", "static")
@@ -19,10 +19,6 @@ def clean_output_dir():
         os.mkdir(full_path)
 
 
-def copy_static_assets():
-    print("Copying static assets")
-
-
 def copy_assets(src, dest):
     print(f"Copying {src} to {dest}")
     for file in os.listdir(src):
@@ -36,16 +32,10 @@ def copy_assets(src, dest):
             copy_assets(os.path.join(src, file), os.path.join(dest, file))
 
 
-def generate_page_from_template(from_path, template_path, dest_path):
-    generate_page(from_path, template_path, dest_path)
-
-
 if __name__ == "__main__":
     clean_output_dir()
     copy_assets(INPUT_DIR, OUTPUT_DIR)
-    content_dir = os.path.join(os.getcwd(), "content")
-    output_file = os.path.join(os.getcwd(), "public", "index.html")
-    markdown_content = os.path.join(content_dir, "index.md")
-    template = os.path.join(content_dir, "template.html")
-
-    generate_page_from_template(markdown_content, template, output_file)
+    from_path = os.path.join(os.getcwd(), "content")
+    dest_path = os.path.join(os.getcwd(), "public")
+    template = os.path.join(from_path, "template.html")
+    generate_pages_recursive(from_path, template, dest_path)
