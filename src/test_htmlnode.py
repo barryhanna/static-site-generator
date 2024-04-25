@@ -1,6 +1,7 @@
 import unittest
 
 from htmlnode import *
+from markdown import *
 
 
 class TestHTMLNode(unittest.TestCase):
